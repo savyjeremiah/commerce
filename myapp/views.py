@@ -67,15 +67,7 @@ def category_view(request, food):
         return redirect('home')
 
 def cart_view(request):
-    if request.user.is_authenticated:
-        cart, _ = Cart.objects.get_or_create(user=request.user)
-    else:
-        session_key = request.session.session_key
-        if not session_key:
-            request.session.create()
-            session_key = request.session.session_key
-        cart, _ = Cart.objects.get_or_create(user=None, session_key=session_key)
-    
+    cart, _ = Cart.objects.get_or_create(user=request.user)
     items = cart.items.all()
     total_price = sum(item.get_total_price() for item in items)
     return render(request, 'cart.html', {
@@ -85,9 +77,6 @@ def cart_view(request):
     })
 
 def add_to_cart(request, product_id):
-    if not request.user.is_authenticated:
-        return redirect('login')
-
     product = get_object_or_404(Product, id=product_id)
     cart, _ = Cart.objects.get_or_create(user=request.user)
     cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
@@ -110,7 +99,6 @@ def update_cart(request, item_id):
         cart_item.quantity = quantity
         cart_item.save()
     return redirect('cart_view')
-
 
 def search_view(request):
     form = SearchForm()

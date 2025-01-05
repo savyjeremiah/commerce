@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from . import views
 from django.conf import settings
 from django.conf.urls.static import static
@@ -23,8 +23,13 @@ urlpatterns = [
     path('payment/success/<int:product_id>/', views.payment_success, name='payment_success'),
     path('paypal-ipn/', views.paypal_ipn, name='paypal_ipn'),
     path('payment/failed/', views.payment_failed, name='payment_failed'),
-    path('checkout/<int:product_id>/', views.checkout, name='checkout'),
+    path('checkout/<int:product_id>/', views.checkout, name='checkout'),  # Added the corrected pattern here
+
+    
+
+
 ]
+
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
