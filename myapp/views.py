@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Product, Category, Cart, CartItem, Wishlist, ShippingAddress
 from django.contrib import messages
+from django.contrib.auth import login as auth_login, authenticate, logout
 from .forms import RegistrationForm, SearchForm, WishlistForm, ShippingAddressForm
 from django.urls import reverse
 from django.conf import settings
@@ -10,40 +11,6 @@ from django.views.decorators.csrf import csrf_exempt
 from paypal.standard.ipn.signals import valid_ipn_received
 from django.dispatch import receiver
 from paypal.standard.forms import PayPalPaymentsForm
-from .forms import RegistrationForm
-from django.contrib.auth import authenticate, login, logout
-
-
-
-def register(request):
-    if request.method == "POST":
-        form = RegistrationForm(request.POST)
-        if form.is_valid():
-            user = form.save(commit=False)
-            user.set_password(form.cleaned_data['password'])
-            user.save()
-            login(request, user)  # Log in the user after registration
-            return redirect('user_login')
-    else:
-        form = RegistrationForm()
-    return render(request, 'register.html', {'form': form})
-def user_login(request):
-    if request.method == "POST":
-        email = request.POST.get('email')
-        password = request.POST.get('password')
-        user = authenticate(request, email=email, password=password)
-        if user is not None:
-            login(request, user)
-            return redirect('home')
-        else:
-            return render(request, 'login.html', {'error': 'Invalid credentials'})
-    return render(request, 'login.html')
-
-def logout_view(request):
-    logout(request)
-    return redirect('login')
-
-
 
 def home(request):
     products = Product.objects.all()
@@ -67,7 +34,15 @@ def category_view(request, food):
         return redirect('home')
 
 def cart_view(request):
-    cart, _ = Cart.objects.get_or_create(user=request.user)
+    if request.user.is_authenticated:
+        cart, _ = Cart.objects.get_or_create(user=request.user)
+    else:
+        session_key = request.session.session_key
+        if not session_key:
+            request.session.create()
+            session_key = request.session.session_key
+        cart, _ = Cart.objects.get_or_create(user=None, session_key=session_key)
+
     items = cart.items.all()
     total_price = sum(item.get_total_price() for item in items)
     return render(request, 'cart.html', {
@@ -77,6 +52,9 @@ def cart_view(request):
     })
 
 def add_to_cart(request, product_id):
+    if not request.user.is_authenticated:
+        return redirect('login')
+
     product = get_object_or_404(Product, id=product_id)
     cart, _ = Cart.objects.get_or_create(user=request.user)
     cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
@@ -100,16 +78,44 @@ def update_cart(request, item_id):
         cart_item.save()
     return redirect('cart_view')
 
+def register(request):
+    if request.method == "POST":
+        form = RegistrationForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.set_password(form.cleaned_data['password'])
+            user.save()
+            auth_login(request, user)  # Log in the user after registration
+            return redirect('home')
+    else:
+        form = RegistrationForm()
+    return render(request, 'register.html', {'form': form})
+
+def user_login(request):
+    if request.method == "POST":
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        user = authenticate(request, email=email, password=password)
+        if user is not None:
+            auth_login(request, user)
+            return redirect('home')
+        else:
+            return render(request, 'login.html', {'error': 'Invalid credentials'})
+    return render(request, 'login.html')
+
+def logout_view(request):
+    logout(request)
+    return redirect('login')
+
 def search_view(request):
     form = SearchForm()
-    results = []
     query = None
-
-    if 'query' in request.GET:
+    results = []
+    if request.method == "GET":
         form = SearchForm(request.GET)
         if form.is_valid():
             query = form.cleaned_data['query']
-            results = Product.objects.filter(name__icontains=query)
+            results = Product.objects.filter(name__icontains=query)  # Corrected the syntax here
 
     return render(request, 'search.html', {'form': form, 'query': query, 'results': results})
 
@@ -170,12 +176,8 @@ def payment_success(request):
 def payment_failed(request):
     return render(request, 'payment_failed.html')
 
-
-
 def checkout(request, product_id):
-
     product = Product.objects.get(id=product_id)
-
     host = request.get_host()
 
     paypal_checkout = {
@@ -185,8 +187,8 @@ def checkout(request, product_id):
         'invoice': uuid.uuid4(),
         'currency_code': 'USD',
         'notify_url': f"http://{host}{reverse('paypal-ipn')}",
-        'return_url': f"http://{host}{reverse('payment-success', kwargs = {'product_id': product.id})}",
-        'cancel_url': f"http://{host}{reverse('payment-failed', kwargs = {'product_id': product.id})}",
+        'return_url': f"http://{host}{reverse('payment-success')}",
+        'cancel_url': f"http://{host}{reverse('payment-failed')}",
     }
 
     paypal_payment = PayPalPaymentsForm(initial=paypal_checkout)
@@ -197,4 +199,3 @@ def checkout(request, product_id):
     }
 
     return render(request, 'checkout.html', context)
-
