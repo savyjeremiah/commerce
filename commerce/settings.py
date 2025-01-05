@@ -121,6 +121,8 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 PAYPAL_RECEIVER_EMAIL = 'sb-dziio35804310@business.example.com'
 PAYPAL_TEST = True  
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+AUTH_USER_MODEL = 'myapp.CustomUser'
+
 
 
 

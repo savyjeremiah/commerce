@@ -1,4 +1,4 @@
-from django.urls import path, include
+from django.urls import path
 from . import views
 from django.conf import settings
 from django.conf.urls.static import static
@@ -13,7 +13,7 @@ urlpatterns = [
     path('remove_from_cart/<int:item_id>/', views.remove_from_cart, name='remove_from_cart'),
     path('update_cart/<int:item_id>/', views.update_cart, name='update_cart'),
     path('register/', views.register, name='register'),
-    path('login/', views.login, name='login'),
+    path('user_login/', views.user_login, name='user_login'),
     path('logout/', views.logout_view, name='logout'),
     path('search_view/', views.search_view, name='search_view'),
     path('add_shipping_address/', views.add_shipping_address, name='add_shipping_address'),
@@ -23,13 +23,8 @@ urlpatterns = [
     path('payment/success/<int:product_id>/', views.payment_success, name='payment_success'),
     path('paypal-ipn/', views.paypal_ipn, name='paypal_ipn'),
     path('payment/failed/', views.payment_failed, name='payment_failed'),
-    path('checkout/<int:product_id>/', views.checkout, name='checkout'),  # Added the corrected pattern here
-
-    
-
-
+    path('checkout/<int:product_id>/', views.checkout, name='checkout'),
 ]
-
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

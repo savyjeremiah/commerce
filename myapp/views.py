@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Product, Category, Cart, CartItem, Wishlist, ShippingAddress
 from django.contrib import messages
-from django.contrib.auth import login as auth_login, authenticate, logout
 from .forms import RegistrationForm, SearchForm, WishlistForm, ShippingAddressForm
 from django.urls import reverse
 from django.conf import settings
@@ -11,6 +10,39 @@ from django.views.decorators.csrf import csrf_exempt
 from paypal.standard.ipn.signals import valid_ipn_received
 from django.dispatch import receiver
 from paypal.standard.forms import PayPalPaymentsForm
+from .forms import RegistrationForm
+from django.contrib.auth import authenticate, login, logout
+
+
+
+def register(request):
+    if request.method == "POST":
+        form = RegistrationForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.set_password(form.cleaned_data['password'])
+            user.save()
+            login(request, user)  # Log in the user after registration
+            return redirect('user_login')
+    else:
+        form = RegistrationForm()
+    return render(request, 'register.html', {'form': form})
+def user_login(request):
+    if request.method == "POST":
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        user = authenticate(request, email=email, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('home')
+        else:
+            return render(request, 'login.html', {'error': 'Invalid credentials'})
+    return render(request, 'login.html')
+
+def logout_view(request):
+    logout(request)
+    return redirect('login')
+
 
 
 def home(request):
@@ -79,35 +111,6 @@ def update_cart(request, item_id):
         cart_item.save()
     return redirect('cart_view')
 
-def register(request):
-    if request.method == "POST":
-        form = RegistrationForm(request.POST)
-        if form.is_valid():
-            user = form.save(commit=False)
-            user.set_password(form.cleaned_data['password'])
-            user.save()
-            return redirect('home')
-        else:
-            messages.error(request, "There was an error with your registration.")
-    else:
-        form = RegistrationForm()
-    return render(request, 'register.html', {'form': form})
-
-def login(request):
-    if request.method == "POST":
-        email = request.POST.get('email')
-        password = request.POST.get('password')
-        user = authenticate(request, email=email, password=password)
-        if user is not None:
-            auth_login(request, user)
-            return redirect('home')
-        else:
-            return render(request, 'login.html', {'error': 'Invalid credentials'})
-    return render(request, 'login.html')
-
-def logout_view(request):
-    logout(request)
-    return redirect('home')
 
 def search_view(request):
     form = SearchForm()
@@ -118,7 +121,7 @@ def search_view(request):
         form = SearchForm(request.GET)
         if form.is_valid():
             query = form.cleaned_data['query']
-            results = Product.objects.filter(name__icontains(query))
+            results = Product.objects.filter(name__icontains=query)
 
     return render(request, 'search.html', {'form': form, 'query': query, 'results': results})
 

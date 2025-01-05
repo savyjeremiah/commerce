@@ -5,8 +5,6 @@ from .models import ShippingAddress
 
 from .models import Wishlist
 from .models import Product
-
-
 class RegistrationForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput)
     confirm_password = forms.CharField(widget=forms.PasswordInput)
@@ -25,6 +23,8 @@ class RegistrationForm(forms.ModelForm):
         if password != confirm_password:
             raise forms.ValidationError('Passwords do not match')
     
+
+
 
 
 
