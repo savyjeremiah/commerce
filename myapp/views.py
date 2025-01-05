@@ -85,8 +85,8 @@ def register(request):
             user = form.save(commit=False)
             user.set_password(form.cleaned_data['password'])
             user.save()
-            auth_login(request, user)  # Log in the user after registration
-            return redirect('home')
+            auth_login(request, user)  
+            return redirect('user_login')
     else:
         form = RegistrationForm()
     return render(request, 'register.html', {'form': form})
@@ -105,7 +105,7 @@ def user_login(request):
 
 def logout_view(request):
     logout(request)
-    return redirect('login')
+    return redirect('user_login')
 
 def search_view(request):
     form = SearchForm()
