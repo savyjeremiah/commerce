@@ -145,6 +145,7 @@ class CartItem(models.Model):
     def get_total_price(self):
         return self.product.price * self.quantity
 
+
 class Wishlist(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     products = models.ManyToManyField(Product, related_name='wishlists')

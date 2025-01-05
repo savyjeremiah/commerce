@@ -53,17 +53,24 @@ def cart_view(request):
 
 def add_to_cart(request, product_id):
     if not request.user.is_authenticated:
-        return redirect('login')
+        return redirect('user_login')
 
     product = get_object_or_404(Product, id=product_id)
-    cart, _ = Cart.objects.get_or_create(user=request.user)
-    cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
+    
+    try:
+        cart, _ = Cart.objects.get_or_create(user=request.user)
+        cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
 
-    if not created:
-        cart_item.quantity += 1
-        cart_item.save()
+        if not created:
+            cart_item.quantity += 1
+            cart_item.save()
+
+    except Exception as e:
+        messages.error(request, f"An error occurred: {e}")
+        return redirect('product_detail', pk=product_id)
 
     return redirect('cart_view')
+
 
 def remove_from_cart(request, item_id):
     cart_item = get_object_or_404(CartItem, id=item_id)
