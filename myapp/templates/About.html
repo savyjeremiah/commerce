@@ -1,18 +1,119 @@
-
-
-
-{% extends 'base.html'%}
-{% block content %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ABOUT</title>
+    <title>About Me - Developer</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>About Us</h1>
-    <p>Welcome to the About page!</p>
+    <header>
+        <h1>About Me</h1>
+    </header>
+    <section class="content">
+        <div class="intro">
+            <h2>Hello, I'm Saviour Jeremiah</h2>
+            <p>I'm a passionate backend developer with a keen interest in building efficient and scalable web applications. My journey in development started with a fascination for solving problems through code, and I’ve been learning and improving ever since.</p>
+        </div>
+        <div class="skills">
+            <h3>Skills</h3>
+            <ul>
+                <li>Python (Django)</li>
+                <li>Database Management (SQLite, PostgreSQL)</li>
+                <li>API Development</li>
+                <li>Version Control (Git, GitHub)</li>
+                <li>Problem Solving</li>
+                <li>Web Application Architecture</li>
+            </ul>
+        </div>
+        <div class="goals">
+            <h3>My Goals</h3>
+            <p>As a developer, my primary goal is to continue learning and building software that makes a real impact. I'm also eager to explore new technologies and frameworks that can improve my coding skills and the quality of the products I create.</p>
+        </div>
+    </section>
+    <footer>
+        <p>Contact me at: <a href="">saviourjeremiah@example.com</a></p>
+        <p>go home: <a href="{% url 'home' %}">home</a></p>
+    </footer>
 </body>
+<style>
+    /* Basic reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+header {
+    background-color: #333;
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+}
+
+h1 {
+    font-size: 2.5rem;
+}
+
+.content {
+    max-width: 800px;
+    margin: 20px auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.intro h2 {
+    color: #2c3e50;
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.intro p {
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+}
+
+.skills h3, .goals h3 {
+    color: #16a085;
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+.skills ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.skills li {
+    margin: 5px 0;
+    font-size: 1.1rem;
+}
+
+footer {
+    text-align: center;
+    margin-top: 20px;
+    background-color: #333;
+    color: #fff;
+    padding: 10px 0;
+}
+
+footer a {
+    color: #16a085;
+    text-decoration: none;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+</style>
 </html>
-{% endblock %}

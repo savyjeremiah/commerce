@@ -157,7 +157,7 @@
                         <a class="nav-link" href="{% url 'about' %}">About</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'search_view' %}">search_view</a>
+                        <a class="nav-link" href="{% url 'search_view' %}">Search Products</a>
                     </li>
                     
                          
@@ -172,11 +172,15 @@
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     Category
                                 </a>
-                                <a class="dropdown-item" href="{% url 'category_view' food='school' %}">house</a>
-                                <a class="dropdown-item" href="{% url 'category_view' food='school' %}">school</a>
-                                <a class="dropdown-item" href="{% url 'category_view' food='car' %}">car</a>
-                                
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    {% for product in products %}
+                                    <a class="dropdown-item" href="{% url 'category_view' product.category.slug %}"> home
+                                        {{ product.category.name }}
+                                    </a>
+                                    {% endfor %}
+                                </div>
                             </li>
+                            
                         </ul>
 
 

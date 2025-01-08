@@ -1,108 +1,130 @@
 {% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title> REGISTER </title>
-   
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REGISTER</title>
+    
+    <!-- Include custom CSS -->
     <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
 </head>
 <body>
-    <h2>Register</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Register</button>
-        <a href="{% url 'user_login' %}" class="link-button">I have an account ready</a>
-        <a href="{% url 'home' %}" class="link-button">Home</a>
-    </form>
+    <div class="form-container">
+        <h2>Register</h2>
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                {{ form.as_p }}
+            </div>
+            <button type="submit" class="btn">Register</button>
+            <div class="links">
+                <a href="{% url 'user_login' %}" class="link-button"><b>I have an account ready</b> Login</a><br>
+                <a href="{% url 'home' %}" class="link-button">Home</a>
+            </div>
+        </form>
+    </div>
 </body>
 <style>
-    /* styles.css */
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f2f2f2;
+    /* General reset */
+* {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body styling */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f7fa;
+    color: #333;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    flex-direction: column;
+    min-height: 100vh;
     padding: 20px;
-    box-sizing: border-box;
+}
+
+/* Form container styling */
+.form-container {
+    background-color: #ffffff;
+    padding: 30px;
+    width: 100%;
+    max-width: 500px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 h2 {
-    color: #333;
-    text-align: center;
+    margin-bottom: 20px;
+    color: #007bff;
+}
+
+/* Form group */
+.form-group {
     margin-bottom: 20px;
 }
 
-form {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+form p {
+    margin-bottom: 15px;
+}
+
+/* Button styling */
+button.btn {
     width: 100%;
-    max-width: 400px;
-    margin-bottom: 20px;
-    box-sizing: border-box;
+    padding: 12px;
+    font-size: 1rem;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 20px;
 }
 
-label {
-    display: block;
-    margin-bottom: 8px;
+button.btn:hover {
+    background-color: #0056b3;
+}
+
+/* Link styling */
+.links {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.link-button {
+    color: #007bff;
+    text-decoration: none;
+    font-size: 0.9rem;
+    display: inline-block;
+    margin-top: 10px;
+}
+
+.link-button:hover {
+    text-decoration: underline;
+}
+
+.link-button b {
     font-weight: bold;
 }
 
-input {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-    transition: border-color 0.3s ease; /* Added transition for input focus */
-}
-
-input:focus {
-    border-color: #4CAF50;
-}
-
-button, .link-button {
-    width: 100%;
-    padding: 10px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease; /* Added transition */
-    text-align: center;  /* Center text in link-buttons */
-    text-decoration: none;  /* Remove underline from link-buttons */
-    display: inline-block;  /* Ensure correct button style for links */
-    margin-top: 10px;  /* Add margin to separate from other elements */
-}
-
-button:hover, .link-button:hover {
-    background-color: #45a049;
-}
-
-/* Media Queries for Responsiveness */
-@media (max-width: 600px) {
-    body {
-        padding: 10px;
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    .form-container {
+        padding: 20px;
     }
 
-    form {
-        padding: 15px;
-        width: 100%;
+    h2 {
+        font-size: 1.5rem;
     }
 
-    button, .link-button {
-        padding: 8px;
-        font-size: 14px;
+    button.btn {
+        font-size: 0.9rem;
     }
 }
 

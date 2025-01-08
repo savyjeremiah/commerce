@@ -129,7 +129,7 @@ class OrderItem(models.Model):
 
 class Cart(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
+
 
     def __str__(self):
         return f"Cart of {self.user.email}"
@@ -164,3 +164,20 @@ class ShippingAddress(models.Model):
 
     def __str__(self):
         return f"{self.address_line_1}, {self.city}, {self.country}"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
