@@ -35,9 +35,10 @@
         </tbody>
     </table>
     <div class="d-flex justify-content-between align-items-center">
-        <h3>Total Price: ${{ total_price }}</h3>
+        <h3>Total Price: ₦{{ total_price }}</h3>
         <a href="{% url 'checkout' cart_items.0.product.id %}" class="btn btn-success">
-            Proceed to Checkout
+            Proceed to Checkout,
+            thank
         </a>
     </div>
     {% else %}
