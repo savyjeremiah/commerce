@@ -151,15 +151,18 @@ def payment_failed(request):
     """View to display payment failure."""
     return render(request, 'payment_failed.html')
 
+
 @login_required
 def checkout(request, product_id):
     """View to handle checkout process."""
     product = get_object_or_404(Product, id=product_id)
     host = request.get_host()
 
+    total_price = request.GET.get('total_price', product.price)  # Get the total_price from the query params or use product price
+
     paypal_checkout = {
         'business': settings.PAYPAL_RECEIVER_EMAIL,
-        'amount': product.price,
+        'amount': total_price,
         'item_name': product.name,
         'invoice': str(uuid.uuid4()),
         'currency_code': 'USD',
@@ -172,12 +175,11 @@ def checkout(request, product_id):
 
     context = {
         'product': product,
+        'total_price': total_price,
         'paypal': paypal_payment
     }
 
     return render(request, 'checkout.html', context)
- 
-
 
 
 

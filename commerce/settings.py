@@ -9,12 +9,12 @@ MEDIA_ROOT = BASE_DIR / 'media'
 MEDIA_URL = '/media/'
 
 # Security settings
-SECRET_KEY = 'django-insecure-@@kngeyi&a&er5bc5b*h+7+3v3gp$%m1u-g)(&v*6ab*br3%=t'  # Ensure this is kept secret in production
-DEBUG = False  # Set to False for production
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'django-insecure-@@kngeyi&a&er5bc5b*h+7+3v3gp$%m1u-g)(&v*6ab*br3%=t')  # Ensure this is kept secret in production
+DEBUG = os.getenv('DJANGO_DEBUG', 'False') == 'True'  # Set to False for production
 ALLOWED_HOSTS = ['*']  # Replace '*' with actual domains in production
 
-# Login URL
-LOGIN_URL = '/user_login/'  # Redirects unauthenticated users to login page
+# # Login URL
+# LOGIN_URL = '/user_login/'  # Redirects unauthenticated users to login page
 
 # Application definition
 INSTALLED_APPS = [
@@ -64,11 +64,13 @@ WSGI_APPLICATION = 'commerce.wsgi.application'
 
 # Database settings (SQLite)
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
     }
 }
+DEBUG = True
+
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
@@ -89,6 +91,9 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_DIRS = [
+    BASE_DIR / "static",  # Or your intended static directory path
+]
 
 # Custom User model
 AUTH_USER_MODEL = 'myapp.CustomUser'  # Ensure your app uses this model
@@ -99,8 +104,8 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 # PayPal settings
-PAYPAL_RECEIVER_EMAIL = 'sb-dziio35804310@business.example.com'
-PAYPAL_TEST = True  # True for sandbox testing, False for production
+PAYPAL_RECEIVER_EMAIL = os.getenv('PAYPAL_RECEIVER_EMAIL', 'sb-dziio35804310@business.example.com')
+PAYPAL_TEST = os.getenv('PAYPAL_TEST', 'True') == 'True'  # True for sandbox testing, False for production
 
 # Default auto field
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

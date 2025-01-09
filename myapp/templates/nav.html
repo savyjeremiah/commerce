@@ -174,7 +174,7 @@
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                     {% for product in products %}
-                                    <a class="dropdown-item" href="{% url 'category_view' product.category.slug %}"> home
+                                    <a class="dropdown-item" href="{% url 'category_view' product.category.slug %}"> 
                                         {{ product.category.name }}
                                     </a>
                                     {% endfor %}

@@ -36,10 +36,11 @@
     </table>
     <div class="d-flex justify-content-between align-items-center">
         <h3>Total Price: ₦{{ total_price }}</h3>
-        <a href="{% url 'checkout' cart_items.0.product.id %}" class="btn btn-success">
-            Proceed to Checkout,
-            thank
+        
+        <a href="{% url 'checkout' product_id=cart_items.0.product.id %}?total_price={{ total_price }}" class="btn btn-success">
+            Proceed to Checkout
         </a>
+        
     </div>
     {% else %}
     
