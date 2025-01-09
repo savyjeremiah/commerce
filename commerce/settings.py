@@ -69,7 +69,7 @@ DATABASES = {
         "NAME": BASE_DIR / "db.sqlite3",
     }
 }
-DEBUG = False
+DEBUG = True
 
 
 # Password validation
