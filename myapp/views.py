@@ -179,7 +179,7 @@ def checkout(request, product_id):
         'paypal': paypal_payment
     }
 
-    return render(request, 'checkout.html', context)
+    return render(request, 'saviourj.html', context)
 
 
 
