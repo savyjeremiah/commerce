@@ -14,7 +14,7 @@ DEBUG = os.getenv('DJANGO_DEBUG', 'False') == 'True'  # Set to False for product
 ALLOWED_HOSTS = ['*']  # Replace '*' with actual domains in production
 
 # # Login URL
-# LOGIN_URL = '/user_login/'  # Redirects unauthenticated users to login page
+LOGIN_URL = '/user_login/'  # Redirects unauthenticated users to login page
 
 # Application definition
 INSTALLED_APPS = [
@@ -69,7 +69,7 @@ DATABASES = {
         "NAME": BASE_DIR / "db.sqlite3",
     }
 }
-DEBUG = True
+DEBUG = False
 
 
 # Password validation
